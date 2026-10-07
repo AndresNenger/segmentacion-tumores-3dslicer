@@ -1,0 +1,51 @@
+{
+ "Hip_R": {
+  "tri": 144278,
+  "bordes_abiertos": 0,
+  "volumen_mm3": 300922,
+  "dims_mm": [
+   137.0,
+   137.4,
+   190.9
+  ],
+  "vox_original": 298219,
+  "vox_limpio": 660014,
+  "islas_originales": 1
+ },
+ "Hip_L": {
+  "tri": 149457,
+  "bordes_abiertos": 3,
+  "volumen_mm3": 317738,
+  "dims_mm": [
+   139.2,
+   146.6,
+   194.6
+  ],
+  "vox_original": 313001,
+  "vox_limpio": 696807,
+  "islas_originales": 1
+ },
+ "Sacrum": {
+  "tri": 97172,
+  "bordes_abiertos": 0,
+  "volumen_mm3": 206350,
+  "dims_mm": [
+   114.2,
+   99.4,
+   121.9
+  ],
+  "vox_original": 256529,
+  "vox_limpio": 452254,
+  "islas_originales": 1
+ },
+ "Femur_R": {
+  "tri": 270853,
+  "bordes_abiertos": 3,
+  "volumen_mm3": 225545,
+  "dims_mm": [
+   90.8,
+   68.4,
+   390.6
+  ]
+ }
+}

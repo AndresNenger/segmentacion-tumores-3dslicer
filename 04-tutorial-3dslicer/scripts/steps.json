@@ -1,0 +1,582 @@
+[
+ {
+  "name": "01_pantalla_inicial",
+  "file": "01_pantalla_inicial.png",
+  "title": "Así se ve 3D Slicer al abrirlo",
+  "narr": "Esta es la pantalla de 3D Slicer. Arriba hay una lista llamada Modules para cambiar de herramienta. A la izquierda está el panel de la herramienta activa, y a la derecha, las vistas de la imagen.",
+  "items": [
+   {
+    "rect": [
+     242,
+     29,
+     217,
+     28
+    ],
+    "label": "1",
+    "note": "lista de módulos"
+   },
+   {
+    "rect": [
+     0,
+     105,
+     430,
+     676
+    ],
+    "label": "2",
+    "note": "panel del módulo"
+   },
+   {
+    "rect": [
+     432,
+     66,
+     1488,
+     890
+    ],
+    "label": "3",
+    "note": "vistas"
+   }
+  ],
+  "click": null
+ },
+ {
+  "name": "02_sampledata",
+  "file": "02_sampledata.png",
+  "title": "Abre el módulo SampleData y pulsa MRBrainTumor1",
+  "narr": "Elige el módulo SampleData en la lista. Aquí hay casos de ejemplo. Pulsa el botón MRBrainTumor1: es una resonancia de cerebro con un tumor.",
+  "items": [
+   {
+    "rect": [
+     242,
+     29,
+     217,
+     28
+    ],
+    "label": "1",
+    "note": "elige SampleData"
+   },
+   {
+    "rect": [
+     9,
+     509,
+     188,
+     147
+    ],
+    "label": "2",
+    "note": "haz clic aquí"
+   }
+  ],
+  "click": [
+   103,
+   582
+  ]
+ },
+ {
+  "name": "03_caso_cargado",
+  "file": "03_caso_cargado.png",
+  "title": "El caso se cargó: tres cortes y una vista 3D",
+  "narr": "Listo. La imagen aparece en tres cortes: arriba a la izquierda el corte axial, abajo a la izquierda el coronal y abajo a la derecha el sagital. Arriba a la derecha está la vista 3D, todavía vacía.",
+  "items": [
+   {
+    "rect": [
+     423,
+     513,
+     498,
+     442
+    ],
+    "label": "1",
+    "note": "axial"
+   },
+   {
+    "rect": [
+     922,
+     513,
+     499,
+     442
+    ],
+    "label": "2",
+    "note": "coronal"
+   },
+   {
+    "rect": [
+     1422,
+     513,
+     498,
+     442
+    ],
+    "label": "3",
+    "note": "sagital"
+   },
+   {
+    "rect": [
+     423,
+     66,
+     1497,
+     442
+    ],
+    "label": "4",
+    "note": "vista 3D"
+   }
+  ],
+  "click": null
+ },
+ {
+  "name": "04_mover_cortes",
+  "file": "04_mover_cortes.png",
+  "title": "Recorre los cortes con la barra de cada vista",
+  "narr": "Para moverte por la imagen, arrastra la barra que está sobre cada corte, o usa la rueda del ratón sobre la imagen. En este corte ya se ve una masa clara y redonda: es el tumor.",
+  "items": [
+   {
+    "rect": [
+     423,
+     513,
+     498,
+     442
+    ],
+    "label": "2",
+    "note": "tumor visible en este corte"
+   }
+  ],
+  "click": null
+ },
+ {
+  "name": "05_segment_editor",
+  "file": "05_segment_editor.png",
+  "title": "Abre el módulo Segment Editor",
+  "narr": "Cambia al módulo Segment Editor. Es la herramienta para pintar y editar segmentaciones. Aquí vas a trabajar casi todo el tutorial.",
+  "items": [
+   {
+    "rect": [
+     242,
+     29,
+     217,
+     28
+    ],
+    "label": "1",
+    "note": "elige Segment Editor"
+   },
+   {
+    "rect": [
+     0,
+     105,
+     430,
+     676
+    ],
+    "label": "2",
+    "note": "panel del Segment Editor"
+   }
+  ],
+  "click": null
+ },
+ {
+  "name": "06_agregar_segmento",
+  "file": "06_agregar_segmento.png",
+  "title": "Pulsa Add para crear un segmento",
+  "narr": "Un segmento es una capa de pintura. Pulsa el botón Add para crear el primero. Lo usaremos para el tumor.",
+  "items": [
+   {
+    "rect": [
+     6,
+     216,
+     115,
+     31
+    ],
+    "label": "1",
+    "note": "Add"
+   }
+  ],
+  "click": [
+   63,
+   231
+  ]
+ },
+ {
+  "name": "07_dos_segmentos",
+  "file": "07_dos_segmentos.png",
+  "title": "Ahora tienes dos segmentos: Tumor y Healthy tissue",
+  "narr": "Pulsa Add otra vez para tener un segundo segmento. Le pusimos nombre: Tumor, en amarillo, y Healthy tissue, que significa tejido sano, en azul. Se cambia el nombre con doble clic sobre el nombre.",
+  "items": [
+   {
+    "rect": [
+     90,
+     250,
+     333,
+     272
+    ],
+    "label": "1",
+    "note": "tabla de segmentos"
+   },
+   {
+    "rect": [
+     6,
+     216,
+     115,
+     31
+    ],
+    "label": "2",
+    "note": "Add"
+   }
+  ],
+  "click": null
+ },
+ {
+  "name": "08_herramienta_paint",
+  "file": "08_herramienta_paint.png",
+  "title": "Elige la herramienta Paint (pincel)",
+  "narr": "En la columna de herramientas elige Paint. Es el pincel. Debajo aparecen sus opciones, como el diámetro del pincel. Con el segmento Tumor seleccionado, todo lo que pintes será tumor.",
+  "items": [
+   {
+    "rect": [
+     13,
+     291,
+     32,
+     31
+    ],
+    "label": "1",
+    "note": "Paint"
+   },
+   {
+    "rect": [
+     0,
+     586,
+     430,
+     220
+    ],
+    "label": "2",
+    "note": "opciones del pincel"
+   }
+  ],
+  "click": [
+   29,
+   306
+  ]
+ },
+ {
+  "name": "09_semillas_tumor",
+  "file": "09_semillas_tumor.png",
+  "title": "Pinta semillas dentro del tumor",
+  "narr": "Con el pincel, pinta unos trazos dentro del tumor, sin llegar al borde. No hace falta cubrirlo entero: bastan unas cuantas manchas bien al centro, en tres o cuatro cortes distintos.",
+  "items": [
+   {
+    "rect": [
+     90,
+     250,
+     439,
+     192
+    ],
+    "label": "1",
+    "note": "segmento Tumor seleccionado"
+   },
+   {
+    "rect": [
+     1200,
+     524,
+     86,
+     89
+    ],
+    "label": "2",
+    "note": "semilla del tumor"
+   }
+  ],
+  "click": null
+ },
+ {
+  "name": "10_semillas_sano",
+  "file": "10_semillas_sano.png",
+  "title": "Pinta semillas en el tejido sano de alrededor",
+  "narr": "Ahora elige el segmento Healthy tissue y pinta un anillo de azul alrededor del tumor, sin tocarlo. También pinta sobre la línea fina del centro, la hoz, para que el tumor no se escape por ahí.",
+  "items": [
+   {
+    "rect": [
+     90,
+     250,
+     439,
+     192
+    ],
+    "label": "1",
+    "note": "ahora Healthy tissue"
+   },
+   {
+    "rect": [
+     1156,
+     477,
+     177,
+     180
+    ],
+    "label": "2",
+    "note": "semillas del tejido sano"
+   }
+  ],
+  "click": null
+ },
+ {
+  "name": "11_grow_from_seeds",
+  "file": "11_grow_from_seeds.png",
+  "title": "Elige Grow from seeds",
+  "narr": "Elige la herramienta Grow from seeds, que significa hacer crecer las semillas. Con ella el programa decide solo, en 3D, hasta dónde llega el tumor y dónde empieza el tejido sano.",
+  "items": [
+   {
+    "rect": [
+     13,
+     359,
+     32,
+     31
+    ],
+    "label": "1",
+    "note": "Grow from seeds"
+   }
+  ],
+  "click": [
+   29,
+   374
+  ]
+ },
+ {
+  "name": "12_initialize",
+  "file": "12_initialize.png",
+  "title": "Pulsa Initialize para ver la vista previa",
+  "narr": "Pulsa Initialize. El programa calcula una vista previa: en los tres cortes verás el tumor en amarillo y el tejido sano en azul, creciendo hasta tocarse.",
+  "items": [
+   {
+    "rect": [
+     285,
+     504,
+     233,
+     25
+    ],
+    "label": "1",
+    "note": "Initialize"
+   }
+  ],
+  "click": [
+   401,
+   516
+  ]
+ },
+ {
+  "name": "13_vista_previa",
+  "file": "13_vista_previa.png",
+  "title": "Revisa la vista previa y pulsa Apply",
+  "narr": "Revisa que el borde amarillo siga el borde del tumor en los tres cortes. Si se ve bien, pulsa Apply para aceptar el resultado.",
+  "items": [
+   {
+    "rect": [
+     312,
+     562,
+     206,
+     25
+    ],
+    "label": "1",
+    "note": "Apply"
+   }
+  ],
+  "click": [
+   415,
+   574
+  ]
+ },
+ {
+  "name": "14_grow_aplicado",
+  "file": "14_grow_aplicado.png",
+  "title": "Resultado: el tumor quedó marcado en todos los cortes",
+  "narr": "Listo. El tumor quedó marcado en todos los cortes con solo unos trazos. Un umbral simple no lo habría logrado, porque la hoz y los vasos también se ven brillantes.",
+  "items": [
+   {
+    "rect": [
+     542,
+     66,
+     689,
+     444
+    ],
+    "label": "1",
+    "note": "axial"
+   },
+   {
+    "rect": [
+     542,
+     511,
+     689,
+     444
+    ],
+    "label": "2",
+    "note": "coronal"
+   },
+   {
+    "rect": [
+     1232,
+     511,
+     688,
+     444
+    ],
+    "label": "3",
+    "note": "sagital"
+   }
+  ],
+  "click": null
+ },
+ {
+  "name": "15_suavizado",
+  "file": "15_suavizado.png",
+  "title": "Suaviza el borde con Smoothing (Median, 3 mm)",
+  "narr": "Elige Smoothing. Deja el método Median con tamaño de 3 milímetros y pulsa Apply. Así se redondean las puntas y desaparecen los puntos sueltos.",
+  "items": [
+   {
+    "rect": [
+     13,
+     427,
+     32,
+     31
+    ],
+    "label": "1",
+    "note": "Smoothing"
+   },
+   {
+    "rect": [
+     101,
+     593,
+     417,
+     25
+    ],
+    "label": "2",
+    "note": "Apply"
+   }
+  ],
+  "click": [
+   309,
+   605
+  ]
+ },
+ {
+  "name": "16_islas",
+  "file": "16_islas.png",
+  "title": "Quita fragmentos sueltos con Islands (Keep largest island)",
+  "narr": "Elige Islands y la opción Keep largest island, que significa quedarse con la isla más grande. Pulsa Apply. Así queda solo el tumor y se borran los restos aislados.",
+  "items": [
+   {
+    "rect": [
+     13,
+     461,
+     32,
+     31
+    ],
+    "label": "1",
+    "note": "Islands"
+   },
+   {
+    "rect": [
+     101,
+     613,
+     417,
+     25
+    ],
+    "label": "2",
+    "note": "Apply"
+   }
+  ],
+  "click": [
+   309,
+   625
+  ]
+ },
+ {
+  "name": "17_ver_en_3d",
+  "file": "17_ver_en_3d.png",
+  "title": "Pulsa Show 3D para ver el tumor en tres dimensiones",
+  "narr": "Pulsa el botón Show 3D. El tumor aparece en la vista 3D de arriba a la derecha. Puedes girarlo arrastrando con el ratón.",
+  "items": [
+   {
+    "rect": [
+     323,
+     216,
+     155,
+     31
+    ],
+    "label": "1",
+    "note": "Show 3D"
+   },
+   {
+    "rect": [
+     1232,
+     66,
+     688,
+     444
+    ],
+    "label": "2",
+    "note": "vista 3D"
+   }
+  ],
+  "click": [
+   400,
+   231
+  ]
+ },
+ {
+  "name": "18_modelo_3d",
+  "file": "18_modelo_3d.png",
+  "title": "El modelo 3D del tumor",
+  "narr": "Este es el modelo 3D de lo que segmentaste. Gíralo con el ratón para mirarlo desde todos los lados.",
+  "items": [
+   {
+    "rect": [
+     1232,
+     66,
+     688,
+     444
+    ],
+    "label": "1",
+    "note": "modelo 3D del tumor"
+   }
+  ],
+  "click": null
+ },
+ {
+  "name": "19_segment_statistics",
+  "file": "19_segment_statistics.png",
+  "title": "Abre Segment Statistics y pulsa Apply",
+  "narr": "Cambia al módulo Segment Statistics. En Segmentation debe estar tu segmentación y en Scalar volume la resonancia. Pulsa Apply para que el programa calcule las medidas.",
+  "items": [
+   {
+    "rect": [
+     93,
+     205,
+     438,
+     51
+    ],
+    "label": "1",
+    "note": "tu segmentación y la imagen"
+   },
+   {
+    "rect": [
+     0,
+     367,
+     535,
+     25
+    ],
+    "label": "2",
+    "note": "Apply"
+   }
+  ],
+  "click": [
+   267,
+   379
+  ]
+ },
+ {
+  "name": "20_resultados",
+  "file": "20_resultados.png",
+  "title": "Resultados: volumen, tamaño e intensidad",
+  "narr": "La tabla muestra el volumen del tumor, unos 16,9 centímetros cúbicos, su diámetro máximo y la intensidad media. Estos números salen de contar los vóxeles que pintaste.",
+  "items": [
+   {
+    "rect": [
+     432,
+     66,
+     1488,
+     890
+    ],
+    "label": "1",
+    "note": "tabla de resultados"
+   }
+  ],
+  "click": null
+ }
+]

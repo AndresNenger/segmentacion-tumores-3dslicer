@@ -1,0 +1,62 @@
+{
+ "Tumor": {
+  "LabelmapSegmentStatisticsPlugin.voxel_count": 13765.0,
+  "LabelmapSegmentStatisticsPlugin.volume_mm3": 16937.402343750007,
+  "LabelmapSegmentStatisticsPlugin.volume_cm3": 16.93740234375001,
+  "LabelmapSegmentStatisticsPlugin.centroid_ras": [
+   -3.8083116600072486,
+   28.30806138757717,
+   27.986828913912092
+  ],
+  "LabelmapSegmentStatisticsPlugin.roundness": 0.9358389658037007,
+  "LabelmapSegmentStatisticsPlugin.flatness": 1.1342450321136395,
+  "LabelmapSegmentStatisticsPlugin.elongation": 1.122812554253597,
+  "LabelmapSegmentStatisticsPlugin.feret_diameter_mm": 39.83046886492802,
+  "LabelmapSegmentStatisticsPlugin.surface_area_mm2": 3408.1147055156835,
+  "LabelmapSegmentStatisticsPlugin.principal_moments": [
+   40.615108911576094,
+   52.251816583623665,
+   65.87428485301582
+  ],
+  "ScalarVolumeSegmentStatisticsPlugin.voxel_count": 13765.0,
+  "ScalarVolumeSegmentStatisticsPlugin.volume_mm3": 16937.402343750007,
+  "ScalarVolumeSegmentStatisticsPlugin.volume_cm3": 16.93740234375001,
+  "ScalarVolumeSegmentStatisticsPlugin.min": 38.0,
+  "ScalarVolumeSegmentStatisticsPlugin.max": 413.0,
+  "ScalarVolumeSegmentStatisticsPlugin.mean": 179.17391936069743,
+  "ScalarVolumeSegmentStatisticsPlugin.stdev": 24.093111719626073,
+  "ScalarVolumeSegmentStatisticsPlugin.median": 176.0,
+  "ScalarVolumeSegmentStatisticsPlugin.percentile_05": 149.0,
+  "ScalarVolumeSegmentStatisticsPlugin.percentile_95": 217.0
+ },
+ "Referencia_sustancia_blanca_derecha": {
+  "LabelmapSegmentStatisticsPlugin.voxel_count": 753.0,
+  "LabelmapSegmentStatisticsPlugin.volume_mm3": 926.5429687500003,
+  "LabelmapSegmentStatisticsPlugin.volume_cm3": 0.9265429687500003,
+  "LabelmapSegmentStatisticsPlugin.centroid_ras": [
+   20.15600000000002,
+   -7.9690000000000225,
+   37.10000000000001
+  ],
+  "LabelmapSegmentStatisticsPlugin.roundness": 1.0123340580918463,
+  "LabelmapSegmentStatisticsPlugin.flatness": 1.0000000000000218,
+  "LabelmapSegmentStatisticsPlugin.elongation": 1.0411232591563453,
+  "LabelmapSegmentStatisticsPlugin.feret_diameter_mm": 11.994165248152955,
+  "LabelmapSegmentStatisticsPlugin.surface_area_mm2": 454.01547175151376,
+  "LabelmapSegmentStatisticsPlugin.principal_moments": [
+   7.11762325697204,
+   7.117623256972352,
+   7.7150597609550005
+  ],
+  "ScalarVolumeSegmentStatisticsPlugin.voxel_count": 753.0,
+  "ScalarVolumeSegmentStatisticsPlugin.volume_mm3": 926.5429687500003,
+  "ScalarVolumeSegmentStatisticsPlugin.volume_cm3": 0.9265429687500003,
+  "ScalarVolumeSegmentStatisticsPlugin.min": 73.0,
+  "ScalarVolumeSegmentStatisticsPlugin.max": 102.0,
+  "ScalarVolumeSegmentStatisticsPlugin.mean": 90.92828685258964,
+  "ScalarVolumeSegmentStatisticsPlugin.stdev": 4.359223452531066,
+  "ScalarVolumeSegmentStatisticsPlugin.median": 90.0,
+  "ScalarVolumeSegmentStatisticsPlugin.percentile_05": 82.0,
+  "ScalarVolumeSegmentStatisticsPlugin.percentile_95": 96.0
+ }
+}

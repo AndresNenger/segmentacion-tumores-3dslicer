@@ -1,0 +1,59 @@
+{
+ "plantilla": {
+  "voladizo_pct": 1.9,
+  "altura_mm": 98.0,
+  "tri": 109876,
+  "bordes_abiertos": 0,
+  "volumen_mm3": 18702,
+  "dims_mm": [
+   37.6,
+   96.7,
+   98.0
+  ],
+  "espesor_p5_mm": 3.2,
+  "espesor_mediana_mm": 3.3,
+  "espesor_min_mm": 2.4
+ },
+ "maniqui": {
+  "voladizo_pct": 0.2,
+  "altura_mm": 33.1,
+  "tri": 167372,
+  "bordes_abiertos": 0,
+  "volumen_mm3": 171499,
+  "dims_mm": [
+   99.0,
+   97.3,
+   33.1
+  ]
+ },
+ "tumor": {
+  "voladizo_pct": 8.2,
+  "altura_mm": 39.5,
+  "tri": 28132,
+  "bordes_abiertos": 0,
+  "volumen_mm3": 16692,
+  "dims_mm": [
+   37.7,
+   33.5,
+   39.5
+  ]
+ },
+ "estimacion_K1C": {
+  "perfil": "Creality K1C 0.4, Creality Generic PLA, capa 0,16 mm, 3 paredes, relleno 20 %, soportes automaticos (perfil generico sin calibrar)",
+  "plantilla": {
+   "tiempo": "1 h 45 min",
+   "cm3": 20.88,
+   "capas": 612
+  },
+  "maniqui": {
+   "tiempo": "2 h 29 min",
+   "cm3": 43.38,
+   "capas": 207
+  },
+  "tumor": {
+   "tiempo": "41 min",
+   "cm3": 7.27,
+   "capas": 246
+  }
+ }
+}

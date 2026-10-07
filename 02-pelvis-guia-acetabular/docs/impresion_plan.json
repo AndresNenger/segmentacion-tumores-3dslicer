@@ -1,0 +1,62 @@
+{
+ "guia": {
+  "orientacion": "eje del tubo vertical (orificio más circular)",
+  "voladizo_libre_pct": 9.8,
+  "voladizo_eje_vertical_pct": 8.3,
+  "altura_impresion_mm": 94.9,
+  "tri": 63188,
+  "bordes_abiertos": 0,
+  "volumen_mm3": 13426,
+  "dims_mm": [
+   91.9,
+   77.9,
+   94.9
+  ],
+  "espesor_local_p5_mm": 2.0,
+  "espesor_local_mediana_mm": 3.61,
+  "espesor_local_min_mm": 1.41,
+  "voladizo_elegido_pct": 8.3,
+  "masa_pla_100pct_g": 16.6,
+  "masa_pla_relleno20_aprox_g": 7.5
+ },
+ "replica": {
+  "descripcion": "Coxal derecho recortado a una esfera de 70 mm alrededor del acetábulo, con base plana",
+  "voladizo_pct": 5.8,
+  "tri": 130230,
+  "bordes_abiertos": 0,
+  "volumen_mm3": 156687,
+  "dims_mm": [
+   101.2,
+   62.3,
+   134.3
+  ],
+  "voladizo_elegido_pct": 4.4,
+  "masa_pla_100pct_g": 194.3,
+  "masa_pla_relleno20_aprox_g": 87.4
+ },
+ "parametros_recomendados_prueba": {
+  "escala": "100 % (mm)",
+  "material": "PLA o PETG (solo banco de pruebas; no apto para uso clínico)",
+  "altura_capa_mm": 0.15,
+  "paredes": 3,
+  "relleno_pct": 20,
+  "soportes": "solo en zonas en rojo (voladizo > 45°)",
+  "boquilla_mm": 0.4,
+  "nota": "Los valores de masa y tiempo son estimaciones; el laminador dará los reales."
+ },
+ "tiempo_s": 3.3,
+ "estimacion_laminador_K1C": {
+  "perfil": "Creality K1C 0.4 + Creality Generic PLA, capa 0,16 mm, 3 paredes, relleno 20 %, soportes en arbol automaticos (perfil generico, sin calibrar)",
+  "guia": {
+   "tiempo": "2 h 08 min",
+   "plastico_cm3": 16.55,
+   "capas": 593
+  },
+  "replica": {
+   "tiempo": "5 h 17 min",
+   "plastico_cm3": 69.22,
+   "capas": 839
+  },
+  "aviso": "Estimaciones de un laminado de prueba; revisar la vista previa en OrcaSlicer antes de imprimir."
+ }
+}

@@ -1,0 +1,36 @@
+CRANIOTOMY TRAINER XR - ARCHIVO PARA META QUEST 3
+Ejercicio academico con datos de ejemplo de 3D Slicer (MRBrainTumor1). No es un dispositivo medico ni sirve para uso clinico.
+
+ARCHIVOS
+  Craniotomy_Trainer_Quest3.html   Simulador completo en UN solo archivo (4,8 MB). La escena, los datos y three.js van incluidos,
+                                   asi que no necesita internet ni servidor. Solo las fuentes de texto se piden por internet; si no hay conexion
+                                   se usan fuentes del sistema y todo funciona igual.
+  vr_escena_tumor.glb              La misma escena 3D (cabeza, craneo aproximado, colgajo, tumor, plantilla, contorno y trayectoria)
+                                   a escala 1:1 en metros, por si quieres abrirla en otra aplicacion de las Quest que lea GLB.
+
+COMO CARGARLO EN LAS GAFAS (por cable USB)
+  1. Enciende las Quest 3 y conectalas al PC con un cable USB-C de datos.
+  2. Con las gafas puestas, acepta "Permitir acceso a los datos".
+  3. En el Explorador de Windows abre: Este equipo > Quest 3 > Almacenamiento interno compartido > Download.
+  4. Copia Craniotomy_Trainer_Quest3.html en esa carpeta.
+  5. En las gafas abre la app "Archivos", entra en Descargas y pulsa el archivo para abrirlo con el Meta Quest Browser
+     (o abre el navegador y escribe: file:///storage/emulated/0/Download/Craniotomy_Trainer_Quest3.html ).
+  6. Pulsa "Enter VR" (realidad virtual) o "Enter passthrough" (realidad mixta).
+
+SI NO SE ABRE EL ARCHIVO LOCAL
+  Algunas versiones del navegador de las Quest limitan los archivos locales. Usa entonces el servidor HTTPS del PC:
+  carpeta ..\vr_quest, comando "python servidor_quest.py" y abre en las gafas la direccion https que imprime
+  (PC y gafas en la misma red Wi-Fi; acepta el aviso del certificado).
+
+CONTROLES
+  Gatillo derecho   herramienta: marcar el contorno / resecar
+  Grip derecho      agarrar la plantilla
+  Grip izquierdo    mover toda la cabeza (para alinearla con un maniqui impreso en passthrough)
+  A / B             paso siguiente / anterior
+  X / Y             mostrar u ocultar cuero cabelludo / craneo
+  Stick derecho     radio de la herramienta, o desplazamiento cerebral en el paso 4
+
+IMPORTANTE
+  - Probado en el navegador de un PC (abriendolo como archivo local, sin internet). NO se ha probado en unas Quest 3.
+  - El craneo es una aproximacion (espesores de referencia); la mecanica de los tejidos esta simplificada.
+  - Para practicar con el maniqui impreso (placa_craneotomia.3mf) usa el modo passthrough y mueve la cabeza con el grip izquierdo.

@@ -1,0 +1,34 @@
+# datos descargados y derivados de los CT
+*.nrrd
+*.nii
+*.nii.gz
+*.dcm
+*.zip
+*.npy
+*.npz
+*.vtu
+*.vtp
+*.mrb
+femur_*.stl
+Hip_*.stl
+Sacrum.stl
+
+# entornos y dependencias
+node_modules/
+deps*/
+__pycache__/
+*.pyc
+
+# claves y certificados
+*.pem
+*.key
+.env
+
+# videos, audio y salidas pesadas
+*.mp4
+*.mov
+*.wav
+*.gcode
+orca_out/
+_*.tmp
+*.log

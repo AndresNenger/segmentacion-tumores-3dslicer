@@ -1,0 +1,555 @@
+<title>Craniotomy Trainer XR</title>
+<style>
+/* Layout: full-bleed 3D stage with a docked instrument panel (left on desktop, bottom sheet on phones). Single dark "operating room" look. */
+:root{
+  --bg:#0b1014; --panel:#121a20; --panel2:#18232b; --line:#26343e; --fg:#e6edf1; --muted:#8fa3b0;
+  --accent:#3ad1c0; --tumor:#f2c230; --warn:#f0a03a; --bad:#ef5b5b; --good:#4cc38a;
+  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif; --body:"IBM Plex Sans",system-ui,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:14px;overflow:hidden}
+#app{position:relative;height:100%;display:grid;grid-template-columns:minmax(300px,360px) 1fr}
+#stage{position:relative;min-width:0;background:radial-gradient(120% 90% at 60% 40%,#172630 0%,var(--bg) 70%)}
+#stage canvas{display:block;width:100%;height:100%;touch-action:none}
+#panel{background:var(--panel);border-right:1px solid var(--line);overflow-y:auto;padding-block:16px;padding-inline:16px;display:flex;flex-direction:column;gap:14px;min-width:0}
+h1{font-family:var(--display);font-weight:600;font-size:30px;letter-spacing:.02em;line-height:1;margin:0;text-wrap:balance}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.sub{color:var(--muted);font-size:12.5px;line-height:1.45;margin:4px 0 0}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.steps button{font:600 12px var(--mono);padding:8px 0;border-radius:6px;border:1px solid var(--line);background:var(--panel2);color:var(--muted);cursor:pointer}
+.steps button[aria-pressed="true"]{background:var(--accent);color:#06211e;border-color:var(--accent)}
+.steps button:focus-visible,.btn:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.card{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.card h2{margin:0;font:600 13px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--fg)}
+.instr{margin:0;line-height:1.5;color:var(--fg)}
+.row{display:flex;flex-wrap:wrap;gap:6px}
+.btn{font:500 13px var(--body);padding:7px 10px;border-radius:6px;border:1px solid var(--line);background:#1d2a33;color:var(--fg);cursor:pointer}
+.btn.primary{background:var(--accent);color:#06211e;border-color:var(--accent);font-weight:600}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.metrics{display:grid;grid-template-columns:1fr auto;gap:4px 10px;font-variant-numeric:tabular-nums}
+.metrics dt{color:var(--muted)} .metrics dd{margin:0;font-family:var(--mono);text-align:right}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font:600 11px var(--mono);letter-spacing:.04em}
+.pill.good{background:rgba(76,195,138,.15);color:var(--good)} .pill.warn{background:rgba(240,160,58,.15);color:var(--warn)} .pill.bad{background:rgba(239,91,91,.15);color:var(--bad)}
+label.sl{display:grid;grid-template-columns:1fr auto;gap:2px 8px;font-size:12.5px;color:var(--muted)}
+label.sl input{grid-column:1/-1;width:100%;accent-color:var(--accent)}
+label.sl output{font-family:var(--mono);color:var(--fg)}
+.toggles{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;font-size:12.5px}
+.toggles label{display:flex;gap:6px;align-items:center;color:var(--fg)}
+.refs{font-size:11.5px;color:var(--muted);line-height:1.45;margin:0;padding-left:16px}
+.refs a{color:var(--accent)}
+.warnbox{border-left:3px solid var(--warn);padding:8px 10px;background:rgba(240,160,58,.08);font-size:12px;line-height:1.45;color:var(--fg)}
+#hud{position:absolute;left:16px;top:16px;display:flex;gap:6px;flex-wrap:wrap;pointer-events:none}
+#hud .pill{pointer-events:auto;background:rgba(11,16,20,.75);border:1px solid var(--line);color:var(--fg)}
+#loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-family:var(--mono)}
+#xrmsg{font-size:12px;color:var(--muted);margin:0}
+table.params{width:100%;border-collapse:collapse;font-size:12px}
+table.params td{border-top:1px solid var(--line);padding:4px 2px;vertical-align:top}
+table.params td:last-child{font-family:var(--mono);text-align:right;white-space:nowrap}
+@media (max-width:760px){
+  #app{grid-template-columns:1fr;grid-template-rows:55% 45%}
+  #stage{grid-row:1} #panel{grid-row:2;border-right:0;border-top:1px solid var(--line)}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<div id="app">
+  <aside id="panel" aria-label="Simulator controls">
+    <div>
+      <div class="eyebrow">Meningioma-like frontal mass · MRBrainTumor1</div>
+      <h1>Craniotomy Trainer XR</h1>
+      <p class="sub">Practice the planned craniotomy at 1:1 scale on a Meta Quest 3 (VR or passthrough) or in this browser. Academic exercise: not a medical device, not for clinical use.</p>
+    </div>
+
+    <div class="steps" role="group" aria-label="Steps">
+      <button id="s1" aria-pressed="true">1 View</button>
+      <button id="s2" aria-pressed="false">2 Fit</button>
+      <button id="s3" aria-pressed="false">3 Mark</button>
+      <button id="s4" aria-pressed="false">4 Open</button>
+      <button id="s5" aria-pressed="false">5 Resect</button>
+    </div>
+
+    <section class="card" aria-live="polite">
+      <h2 id="stepTitle">Inspect the plan</h2>
+      <p class="instr" id="stepText"></p>
+      <div class="row" id="stepButtons"></div>
+      <dl class="metrics" id="metrics"></dl>
+    </section>
+
+    <section class="card">
+      <h2>Physiology</h2>
+      <label class="sl" for="map">Mean arterial pressure (MAP)<output id="mapv">90 mmHg</output><input id="map" type="range" min="50" max="130" value="90"></label>
+      <label class="sl" for="icp">Intracranial pressure (ICP)<output id="icpv">10 mmHg</output><input id="icp" type="range" min="0" max="40" value="10"></label>
+      <dl class="metrics"><dt>Cerebral perfusion pressure = MAP − ICP</dt><dd id="cpp">80 mmHg</dd><dt>Status</dt><dd id="cppst"><span class="pill good">adequate</span></dd></dl>
+      <label class="sl" for="shift">Brain shift after opening the dura<output id="shiftv">4.4 mm</output><input id="shift" type="range" min="0" max="12" step="0.2" value="4.4"></label>
+      <label class="sl" for="rad">Aspirator / tool radius<output id="radv">3.0 mm</output><input id="rad" type="range" min="1.5" max="6" step="0.5" value="3"></label>
+    </section>
+
+    <section class="card">
+      <h2>Layers</h2>
+      <div class="toggles">
+        <label><input type="checkbox" id="t_skin" checked> Scalp</label>
+        <label><input type="checkbox" id="t_skull" checked> Skull (approx.)</label>
+        <label><input type="checkbox" id="t_tumor" checked> Tumor</label>
+        <label><input type="checkbox" id="t_plan" checked> Trajectory + outline</label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Meta Quest 3</h2>
+      <div class="row"><button class="btn primary" id="vrBtn" disabled>Enter VR</button><button class="btn" id="arBtn" disabled>Enter passthrough</button></div>
+      <p id="xrmsg">Checking WebXR…</p>
+      <table class="params" aria-label="Controller mapping"><tbody>
+        <tr><td>Right trigger</td><td>tool: mark / resect</td></tr>
+        <tr><td>Right grip</td><td>grab the template</td></tr>
+        <tr><td>Left grip</td><td>move the whole head</td></tr>
+        <tr><td>A / B</td><td>next / previous step</td></tr>
+        <tr><td>X / Y</td><td>scalp / skull on-off</td></tr>
+        <tr><td>Right stick ↑↓</td><td>tool radius or brain shift</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="card">
+      <h2>Physical and physiological parameters</h2>
+      <table class="params"><tbody>
+        <tr><td>Scalp thickness (adult range 3–5 mm)</td><td>4.0 mm</td></tr>
+        <tr><td>Frontal bone thickness (CT means ≈ 6.6–8.0 mm)</td><td>7.5 mm</td></tr>
+        <tr><td>Normal brain shear stiffness (MRE)</td><td>≈ 3 kPa</td></tr>
+        <tr><td>Meningioma stiffness (MRE, mean ± SD)</td><td>3.8 ± 1.7 kPa</td></tr>
+        <tr><td>Brain shift after dural opening (mean)</td><td>4.4 mm</td></tr>
+        <tr><td>Normal ICP</td><td>5–15 mmHg</td></tr>
+        <tr><td>CPP below which ischemia risk rises</td><td>&lt; 60 mmHg</td></tr>
+      </tbody></table>
+      <ol class="refs">
+        <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11990845/" target="_blank" rel="noopener">Meningioma stiffness with MR elastography</a></li>
+        <li><a href="https://www.ovid.com/jnls/neurosurgery/abstract/00006123-199809000-00066~measurement-of-intraoperative-brain-surface-deformation" target="_blank" rel="noopener">Brain surface deformation under a craniotomy (Neurosurgery, 1998)</a></li>
+        <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8827567/" target="_blank" rel="noopener">Cranial vault thickness on CT</a></li>
+        <li><a href="https://arxiv.org/pdf/2405.08489" target="_blank" rel="noopener">Scalp thickness range (transcranial ultrasound study)</a></li>
+        <li><a href="https://en.wikipedia.org/wiki/Intracranial_pressure" target="_blank" rel="noopener">Intracranial pressure and CPP</a></li>
+      </ol>
+      <div class="warnbox">Values are literature references used to drive a teaching model. The skull is approximated from these thicknesses (T1 MRI does not show bone well). Tissue stiffness only changes controller vibration and tool speed; there is no validated soft-tissue mechanics.</div>
+    </section>
+  </aside>
+
+  <main id="stage">
+    <div id="hud"><span class="pill" id="hudStep">Step 1 · View</span><span class="pill" id="hudCpp">CPP 80 mmHg</span></div>
+    <div id="loading">Loading 1:1 head model…</div>
+  </main>
+</div>
+
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { TransformControls } from "three/addons/controls/TransformControls.js";
+
+const $ = (id) => document.getElementById(id);
+const stage = $("stage");
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.xr.enabled = true;
+renderer.localClippingEnabled = true;
+stage.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, 1, 0.01, 20);
+camera.position.set(0.35, 1.45, 0.25);
+scene.add(new THREE.HemisphereLight(0xdfefff, 0x20282e, 1.1));
+const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(1, 2, 1.5); scene.add(key);
+const fill = new THREE.DirectionalLight(0x9fc8ff, 0.5); fill.position.set(-1.5, 1, -1); scene.add(fill);
+
+const rig = new THREE.Group(); rig.position.set(0, 1.25, -0.45); scene.add(rig);   // head placed in front of the user, chest height
+const model = new THREE.Group(); rig.add(model);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.copy(rig.position); controls.enableDamping = true; controls.minDistance = 0.12; controls.maxDistance = 1.5;
+
+function resize() { const r = stage.getBoundingClientRect(); renderer.setSize(r.width, r.height, false); camera.aspect = r.width / Math.max(r.height, 1); camera.updateProjectionMatrix(); }
+new ResizeObserver(resize).observe(stage); resize();
+
+const S = { step: 1, flap: true, dura: false, shift: 4.4, rad: 3.0, map: 90, icp: 10, t0: null, trace: [], removedT: 0, removedH: 0, startRes: null };
+let N = {}, data = null, plannedTpl = null, tumorGroup, tumorIM, healthyIM, tumorPos, healthyPos, aliveT, aliveH, ghost, traceLine, outlineSamples;
+const tmpV = new THREE.Vector3(), tmpQ = new THREE.Quaternion(), tmpM = new THREE.Matrix4();
+
+async function loadScene() {
+  const loader = new GLTFLoader();
+  try { return await loader.loadAsync("vr_escena_tumor.glb"); }
+  catch (e) {
+    const b64 = await (await fetch("vr_escena_tumor.b64.txt")).text();
+    const bin = Uint8Array.from(atob(b64.trim()), (ch) => ch.charCodeAt(0));
+    return await loader.parseAsync(bin.buffer, "");
+  }
+}
+const [gltf, json] = await Promise.all([loadScene(), fetch("vr_data.json").then((r) => r.json())]);
+data = json;
+model.add(gltf.scene);
+gltf.scene.updateMatrixWorld(true);
+gltf.scene.traverse((o) => {
+  if (o.isMesh) {
+    N[o.name] = o;
+    const m = o.material; m.side = THREE.DoubleSide;
+    if (m.transparent || m.opacity < 1) { m.transparent = true; m.depthWrite = false; }
+  }
+});
+// centre the head on the rig
+N.skin.geometry.computeBoundingBox(); const c = N.skin.geometry.boundingBox.getCenter(new THREE.Vector3()).applyMatrix4(N.skin.matrix);
+model.position.copy(c).multiplyScalar(-1); rig.updateMatrixWorld(true);
+N.skin.renderOrder = 10; N.skin.material.opacity = 0.32;
+// pivot of the template at its own centre (geometry stays in mm, node scale 0.001)
+N.template.geometry.computeBoundingBox(); const cg = N.template.geometry.boundingBox.getCenter(new THREE.Vector3());
+N.template.geometry.translate(-cg.x, -cg.y, -cg.z); N.template.position.add(cg.clone().multiply(N.template.scale).applyQuaternion(N.template.quaternion)); N.template.updateMatrix();
+plannedTpl = { pos: N.template.position.clone(), quat: N.template.quaternion.clone() };
+const tplCenterLocal = N.template.position.clone();
+$("loading").hidden = true;
+
+// tumor + healthy voxels for resection
+const vs = data.voxel_mm / 1000;
+tumorGroup = new THREE.Group(); model.add(tumorGroup);
+const boxG = new THREE.BoxGeometry(vs * 0.92, vs * 0.92, vs * 0.92);
+tumorPos = data.tumor_voxels.map((p) => new THREE.Vector3(...p));
+healthyPos = data.healthy_voxels.map((p) => new THREE.Vector3(...p));
+tumorIM = new THREE.InstancedMesh(boxG, new THREE.MeshStandardMaterial({ color: 0xf2c230, roughness: 0.6 }), tumorPos.length);
+healthyIM = new THREE.InstancedMesh(boxG, new THREE.MeshStandardMaterial({ color: 0xe88a9a, roughness: 0.7, transparent: true, opacity: 0.35, depthWrite: false }), healthyPos.length);
+aliveT = new Uint8Array(tumorPos.length).fill(1); aliveH = new Uint8Array(healthyPos.length).fill(1);
+const setI = (im, arr, i, on) => { tmpM.makeScale(on ? 1 : 0, on ? 1 : 0, on ? 1 : 0); tmpM.setPosition(arr[i]); im.setMatrixAt(i, tmpM); };
+tumorPos.forEach((p, i) => setI(tumorIM, tumorPos, i, true)); healthyPos.forEach((p, i) => setI(healthyIM, healthyPos, i, true));
+tumorGroup.add(tumorIM, healthyIM); tumorGroup.visible = false;
+// planned tumor position (ghost) shown after brain shift
+ghost = new THREE.Mesh(N.tumor.geometry, new THREE.MeshBasicMaterial({ color: 0x3ad1c0, wireframe: true, transparent: true, opacity: 0.35 }));
+ghost.position.copy(N.tumor.position); ghost.quaternion.copy(N.tumor.quaternion); ghost.scale.copy(N.tumor.scale); ghost.visible = false; N.tumor.parent.add(ghost);
+const shiftDir = new THREE.Vector3(...data.shift_dir).normalize();
+const tumorBase = N.tumor.position.clone();
+// outline polyline samples (model space)
+outlineSamples = data.outline.map((p) => new THREE.Vector3(...p));
+// trace line
+const traceGeo = new THREE.BufferGeometry(); traceGeo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(3 * 4000), 3)); traceGeo.setDrawRange(0, 0);
+traceLine = new THREE.Line(traceGeo, new THREE.LineBasicMaterial({ color: 0xb6ff5c })); traceLine.renderOrder = 20; traceLine.material.depthTest = false; model.add(traceLine);
+
+// ---------- desktop template gizmo ----------
+const tcontrols = new TransformControls(camera, renderer.domElement);
+tcontrols.setSize(0.8); tcontrols.addEventListener("dragging-changed", (e) => (controls.enabled = !e.value));
+tcontrols.addEventListener("objectChange", updateMetrics);
+scene.add(tcontrols);
+
+// ---------- physiology ----------
+function physio() {
+  S.map = +$("map").value; S.icp = +$("icp").value; const cpp = S.map - S.icp;
+  $("mapv").textContent = S.map + " mmHg"; $("icpv").textContent = S.icp + " mmHg"; $("cpp").textContent = cpp + " mmHg";
+  const st = cpp < 60 ? ["bad", "ischemia risk"] : cpp > 100 ? ["warn", "high"] : ["good", "adequate"];
+  $("cppst").innerHTML = `<span class="pill ${st[0]}">${st[1]}</span>`;
+  $("hudCpp").textContent = `CPP ${cpp} mmHg`; $("hudCpp").className = "pill " + st[0];
+  if (S.icp > 15) $("cppst").innerHTML += ` <span class="pill warn">ICP above normal</span>`;
+  panelDirty = true;
+}
+["map", "icp"].forEach((id) => $(id).addEventListener("input", physio));
+$("shift").addEventListener("input", () => { S.shift = +$("shift").value; $("shiftv").textContent = S.shift.toFixed(1) + " mm"; applyShift(); });
+$("rad").addEventListener("input", () => { S.rad = +$("rad").value; $("radv").textContent = S.rad.toFixed(1) + " mm"; toolTip.scale.setScalar(S.rad / 3); panelDirty = true; });
+function applyShift() {
+  const mm = S.dura ? S.shift : 0;
+  const off = shiftDir.clone().multiplyScalar(mm / 1000);
+  N.tumor.position.copy(tumorBase).add(off); tumorGroup.position.copy(off); ghost.visible = S.dura && mm > 0.1;
+  updateMetrics();
+}
+const layer = { t_skin: () => N.skin, t_skull: () => [N.skull, N.bone_flap], t_tumor: () => N.tumor, t_plan: () => [N.trajectory, N.outline] };
+for (const id in layer) $(id).addEventListener("change", (e) => setLayer(id, e.target.checked));
+function setLayer(id, on) { [].concat(layer[id]()).forEach((o) => { if (o === N.bone_flap) o.visible = on && S.flap; else o.visible = on; }); $(id).checked = on; }
+
+// ---------- steps ----------
+const STEPS = {
+  1: { t: "Inspect the plan", x: "Rotate around the 1:1 head. Yellow: tumor (16.9 cm³). Red ring: planned craniotomy outline (≈ 54 mm, tumor + 10 mm). Orange line: trajectory, entering ≥ 15 mm from the midline to spare the superior sagittal sinus." },
+  2: { t: "Fit the craniotomy template", x: "Move and rotate the template until it seats on the scalp. Target: under 2 mm and 2° from the planned pose. Desktop: drag the gizmo. Quest: hold the right grip near the template." },
+  3: { t: "Mark the craniotomy", x: "Trace the outline on the scalp through the template window. Desktop: drag on the scalp. Quest: hold the right trigger and point at the scalp. Coverage and deviation are scored against the plan." },
+  4: { t: "Open bone and dura", x: "Lift the bone flap (≈ 7.5 mm frontal bone), then open the dura. After the dura opens, the brain sinks by the shift you set (mean 4.4 mm in the literature). The cyan wireframe shows where the tumor was in the plan." },
+  5: { t: "Resect the tumor", x: "Remove the yellow voxels with the aspirator. Pink voxels are a 3 mm rim of healthy brain: avoid them. Desktop: hold the mouse on the tumor. Quest: hold the right trigger with the tool tip inside the tumor." },
+};
+function setStep(n) {
+  S.step = Math.max(1, Math.min(5, n));
+  for (let i = 1; i <= 5; i++) $("s" + i).setAttribute("aria-pressed", String(i === S.step));
+  $("stepTitle").textContent = STEPS[S.step].t; $("stepText").textContent = STEPS[S.step].x;
+  $("hudStep").textContent = `Step ${S.step} · ${["View", "Fit", "Mark", "Open", "Resect"][S.step - 1]}`;
+  const b = $("stepButtons"); b.innerHTML = "";
+  const add = (label, fn, primary, disabled) => { const e = document.createElement("button"); e.className = "btn" + (primary ? " primary" : ""); e.textContent = label; e.disabled = !!disabled; e.onclick = fn; b.appendChild(e); };
+  tcontrols.detach();
+  N.template.visible = S.step >= 2 && S.step <= 3;
+  traceLine.visible = S.step !== 5;
+  tumorGroup.visible = S.step === 5; N.tumor.visible = S.step !== 5 && $("t_tumor").checked;
+  if (S.step === 2) {
+    if (N.template.position.distanceTo(plannedTpl.pos) < 1e-6) scrambleTemplate();
+    if (!renderer.xr.isPresenting) tcontrols.attach(N.template);
+    add("Move", () => tcontrols.setMode("translate")); add("Rotate", () => tcontrols.setMode("rotate"));
+    add("Reset offset", scrambleTemplate); add("Snap to plan", () => { N.template.position.copy(plannedTpl.pos); N.template.quaternion.copy(plannedTpl.quat); updateMetrics(); });
+  }
+  if (S.step === 3) { add("Clear marking", () => { S.trace = []; traceLine.geometry.setDrawRange(0, 0); updateMetrics(); }); }
+  if (S.step === 4) {
+    add(S.flap ? "Lift bone flap" : "Bone flap removed", liftFlap, S.flap, !S.flap);
+    add(S.dura ? "Dura open" : "Open dura", () => { S.dura = true; applyShift(); setStep(4); }, !S.flap && !S.dura, S.flap || S.dura);
+    add("Close and reset", () => { S.flap = true; S.dura = false; N.bone_flap.visible = $("t_skull").checked; N.bone_flap.position.set(0, 0, 0); flapAnim = 0; applyShift(); setStep(4); });
+  }
+  if (S.step === 5) {
+    add("Reset tumor", resetTumor);
+  }
+  updateMetrics(); panelDirty = true;
+}
+for (let i = 1; i <= 5; i++) $("s" + i).onclick = () => setStep(i);
+function scrambleTemplate() {
+  const ad = new THREE.Vector3(...data.approach_dir).normalize();
+  N.template.position.copy(plannedTpl.pos).addScaledVector(ad, 0.06).add(new THREE.Vector3(0.025, 0, 0.015));
+  N.template.quaternion.copy(plannedTpl.quat).premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0.3, 1, 0.2).normalize(), 0.35));
+  updateMetrics();
+}
+let flapAnim = 0;
+function liftFlap() { if (!S.flap) return; S.flap = false; flapAnim = 1; setStep(4); }
+function resetTumor() { aliveT.fill(1); aliveH.fill(1); tumorPos.forEach((p, i) => setI(tumorIM, tumorPos, i, true)); healthyPos.forEach((p, i) => setI(healthyIM, healthyPos, i, true)); tumorIM.instanceMatrix.needsUpdate = healthyIM.instanceMatrix.needsUpdate = true; S.removedT = S.removedH = 0; S.startRes = null; updateMetrics(); }
+
+// ---------- metrics ----------
+function templateError() {
+  const t = N.template;
+  const curC = tplCenterLocal.clone().sub(plannedTpl.pos).applyQuaternion(tmpQ.copy(plannedTpl.quat).invert()).applyQuaternion(t.quaternion).add(t.position);
+  const dmm = curC.distanceTo(tplCenterLocal) * 1000;
+  const ang = THREE.MathUtils.radToDeg(2 * Math.acos(Math.min(1, Math.abs(t.quaternion.dot(plannedTpl.quat)))));
+  return [dmm, ang];
+}
+function traceScore() {
+  if (S.trace.length < 2) return null;
+  let sum = 0, mx = 0;
+  for (const p of S.trace) { let best = 1e9; for (const q of outlineSamples) best = Math.min(best, p.distanceToSquared(q)); const d = Math.sqrt(best) * 1000; sum += d; mx = Math.max(mx, d); }
+  let cov = 0; for (const q of outlineSamples) { let best = 1e9; for (const p of S.trace) best = Math.min(best, p.distanceToSquared(q)); if (Math.sqrt(best) * 1000 < 3) cov++; }
+  return [sum / S.trace.length, mx, (100 * cov) / outlineSamples.length];
+}
+const pill = (cls, txt) => `<span class="pill ${cls}">${txt}</span>`;
+let panelDirty = true;
+function updateMetrics() {
+  const m = $("metrics"); let h = "";
+  if (S.step === 1) h = `<dt>Tumor volume</dt><dd>16.9 cm³</dd><dt>Max. diameter</dt><dd>39.8 mm</dd><dt>Depth scalp → tumor</dt><dd>${data.plan.profundidad_mm} mm</dd><dt>Window</dt><dd>${data.plan.ventana_mm} mm</dd>`;
+  if (S.step === 2) { const [d, a] = templateError(); const ok = d < 2 && a < 2; h = `<dt>Position error</dt><dd>${d.toFixed(1)} mm</dd><dt>Angle error</dt><dd>${a.toFixed(1)}°</dd><dt>Seating</dt><dd>${ok ? pill("good", "seated") : d < 5 && a < 5 ? pill("warn", "close") : pill("bad", "off")}</dd>`; S.lastSeat = ok; }
+  if (S.step === 3) { const s = traceScore(); h = s ? `<dt>Mean deviation</dt><dd>${s[0].toFixed(1)} mm</dd><dt>Max. deviation</dt><dd>${s[1].toFixed(1)} mm</dd><dt>Outline covered</dt><dd>${s[2].toFixed(0)} %</dd><dt>Quality</dt><dd>${s[0] < 2 && s[2] > 80 ? pill("good", "on plan") : s[0] < 4 ? pill("warn", "review") : pill("bad", "off plan")}</dd>` : `<dt>Marking</dt><dd>not started</dd>`; }
+  if (S.step === 4) h = `<dt>Bone flap</dt><dd>${S.flap ? "in place" : "removed"}</dd><dt>Dura</dt><dd>${S.dura ? "open" : "closed"}</dd><dt>Tumor offset from plan</dt><dd>${(S.dura ? S.shift : 0).toFixed(1)} mm</dd><dt>Navigation accuracy</dt><dd>${!S.dura || S.shift < 2 ? pill("good", "plan valid") : S.shift < 3 ? pill("warn", "re-check") : pill("bad", "update images")}</dd>`;
+  if (S.step === 5) {
+    const tot = tumorPos.length, vol = Math.pow(data.voxel_mm, 3) / 1000;
+    const pct = (100 * S.removedT) / tot; const t = S.startRes ? (performance.now() - S.startRes) / 1000 : 0;
+    h = `<dt>Tumor removed</dt><dd>${pct.toFixed(1)} %</dd><dt>Residual tumor</dt><dd>${((tot - S.removedT) * vol).toFixed(2)} cm³</dd><dt>Healthy rim removed</dt><dd>${(S.removedH * vol).toFixed(2)} cm³</dd><dt>Time</dt><dd>${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, "0")}</dd>`;
+    if (S.flap) h += `<dt>Access</dt><dd>${pill("bad", "bone flap in place")}</dd>`; else if (!S.dura) h += `<dt>Access</dt><dd>${pill("warn", "dura closed")}</dd>`;
+  }
+  m.innerHTML = h; panelDirty = true;
+}
+
+// ---------- tool actions ----------
+const local = new THREE.Vector3();
+function resectAt(worldP, tissueCb) {
+  if (S.flap || !S.dura) return 0;
+  local.copy(worldP); tumorGroup.worldToLocal(local);
+  const r2 = Math.pow(S.rad / 1000, 2); let nt = 0, nh = 0;
+  for (let i = 0; i < tumorPos.length; i++) if (aliveT[i] && tumorPos[i].distanceToSquared(local) < r2) { aliveT[i] = 0; setI(tumorIM, tumorPos, i, false); nt++; }
+  for (let i = 0; i < healthyPos.length; i++) if (aliveH[i] && healthyPos[i].distanceToSquared(local) < r2) { aliveH[i] = 0; setI(healthyIM, healthyPos, i, false); nh++; }
+  if (nt || nh) { if (!S.startRes) S.startRes = performance.now(); S.removedT += nt; S.removedH += nh; tumorIM.instanceMatrix.needsUpdate = healthyIM.instanceMatrix.needsUpdate = true; updateMetrics(); }
+  if (tissueCb) tissueCb(nt, nh);
+  return nt + nh;
+}
+function addTrace(worldP) {
+  const p = model.worldToLocal(worldP.clone());
+  const last = S.trace[S.trace.length - 1];
+  if (last && last.distanceTo(p) < 0.001) return;
+  if (S.trace.length >= 4000) return;
+  S.trace.push(p); const a = traceLine.geometry.attributes.position; a.setXYZ(S.trace.length - 1, p.x, p.y, p.z); a.needsUpdate = true; traceLine.geometry.setDrawRange(0, S.trace.length);
+  if (S.trace.length % 5 === 0) updateMetrics();
+}
+
+// ---------- desktop pointer ----------
+const ray = new THREE.Raycaster(); const ndc = new THREE.Vector2(); let drawing = false;
+function pick(ev) { ray.far = Infinity; const r = renderer.domElement.getBoundingClientRect(); ndc.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1); ray.setFromCamera(ndc, camera); }
+function pointerAct(ev) {
+  pick(ev);
+  if (S.step === 3) { const h = ray.intersectObject(N.skin, false)[0]; if (h) { addTrace(h.point); return true; } }
+  if (S.step === 5) { const h = ray.intersectObjects([tumorIM, healthyIM], false)[0]; if (h) { resectAt(h.point); return true; } }
+  return false;
+}
+renderer.domElement.addEventListener("pointerdown", (ev) => { if ((S.step === 3 || S.step === 5) && pointerAct(ev)) { drawing = true; controls.enabled = false; } });
+renderer.domElement.addEventListener("pointermove", (ev) => { if (drawing) pointerAct(ev); });
+addEventListener("pointerup", () => { if (drawing) { drawing = false; controls.enabled = true; updateMetrics(); } });
+
+// ---------- XR ----------
+const toolTip = new THREE.Mesh(new THREE.SphereGeometry(0.003, 20, 14), new THREE.MeshBasicMaterial({ color: 0x3ad1c0, transparent: true, opacity: 0.8 }));
+const ctrl = [renderer.xr.getController(0), renderer.xr.getController(1)];
+const grips = [renderer.xr.getControllerGrip(0), renderer.xr.getControllerGrip(1)];
+const hands = {};
+ctrl.forEach((c, i) => {
+  scene.add(c); scene.add(grips[i]);
+  const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3(0, 0, -0.25)]), new THREE.LineBasicMaterial({ color: 0x3ad1c0, transparent: true, opacity: 0.6 }));
+  c.add(line);
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.006, 0.09, 12), new THREE.MeshStandardMaterial({ color: 0x9aa7b0, metalness: 0.6, roughness: 0.3 }));
+  body.rotation.x = Math.PI / 2; body.position.z = -0.045; c.add(body);
+  c.addEventListener("connected", (e) => { hands[e.data.handedness] = { c, src: e.data, prev: [] }; if (e.data.handedness === "right") { c.add(toolTip); toolTip.position.set(0, 0, -0.095); } if (e.data.handedness === "left") attachPanel(c); });
+  c.addEventListener("disconnected", (e) => { delete hands[e.data && e.data.handedness]; });
+  c.addEventListener("selectstart", () => (c.userData.sel = true)); c.addEventListener("selectend", () => (c.userData.sel = false));
+  c.addEventListener("squeezestart", () => onSqueeze(c, true)); c.addEventListener("squeezeend", () => onSqueeze(c, false));
+});
+function haptic(c, v, ms) { const src = Object.values(hands).find((h) => h.c === c); const a = src && src.src.gamepad && src.src.gamepad.hapticActuators; if (a && a[0]) a[0].pulse(v, ms); }
+function onSqueeze(c, on) {
+  const hand = Object.values(hands).find((h) => h.c === c); if (!hand) return;
+  if (hand.src.handedness === "left") { if (on) c.attach(rig); else scene.attach(rig); return; }
+  if (S.step !== 2) return;
+  if (on) { const wp = N.template.getWorldPosition(new THREE.Vector3()); const tp = c.getWorldPosition(new THREE.Vector3()); if (wp.distanceTo(tp) < 0.15) { c.attach(N.template); c.userData.holding = true; } }
+  else if (c.userData.holding) { N.template.parent.remove(N.template); gltf.scene.attach(N.template); c.userData.holding = false; updateMetrics(); if (S.lastSeat) haptic(c, 0.8, 120); }
+}
+// in-headset panel (canvas texture)
+const pc = document.createElement("canvas"); pc.width = 768; pc.height = 512; const pctx = pc.getContext("2d");
+const ptex = new THREE.CanvasTexture(pc); ptex.colorSpace = THREE.SRGBColorSpace;
+const vrPanel = new THREE.Mesh(new THREE.PlaneGeometry(0.21, 0.14), new THREE.MeshBasicMaterial({ map: ptex, transparent: true }));
+vrPanel.position.set(0.32, 0.12, 0); rig.add(vrPanel); vrPanel.rotation.y = -0.5; vrPanel.visible = false;
+function attachPanel(c) { c.add(vrPanel); vrPanel.position.set(0, 0.07, -0.08); vrPanel.rotation.set(-0.6, 0, 0); }
+function drawPanel() {
+  const g = pctx; g.fillStyle = "rgba(11,16,20,0.92)"; g.fillRect(0, 0, 768, 512);
+  g.fillStyle = "#3ad1c0"; g.font = "600 26px monospace"; g.fillText(`STEP ${S.step}/5`, 28, 46);
+  g.fillStyle = "#e6edf1"; g.font = "600 40px sans-serif"; g.fillText(STEPS[S.step].t, 28, 96);
+  const tmp = document.createElement("div"); tmp.innerHTML = $("metrics").innerHTML;
+  const dts = [...tmp.querySelectorAll("dt")], dds = [...tmp.querySelectorAll("dd")];
+  g.font = "28px sans-serif"; dts.forEach((dt, i) => { g.fillStyle = "#8fa3b0"; g.fillText(dt.textContent, 28, 156 + i * 46); g.fillStyle = "#e6edf1"; g.textAlign = "right"; g.fillText(dds[i].textContent, 740, 156 + i * 46); g.textAlign = "left"; });
+  g.fillStyle = "#8fa3b0"; g.font = "24px sans-serif"; g.fillText(`CPP ${S.map - S.icp} mmHg · shift ${S.shift.toFixed(1)} mm · tool ${S.rad.toFixed(1)} mm`, 28, 476);
+  ptex.needsUpdate = true; panelDirty = false;
+}
+renderer.xr.addEventListener("sessionstart", () => { vrPanel.visible = true; tcontrols.detach(); controls.enabled = false; if (renderer.xr.getSession().environmentBlendMode && renderer.xr.getSession().environmentBlendMode !== "opaque") stage.style.background = "none"; });
+renderer.xr.addEventListener("sessionend", () => { vrPanel.visible = false; controls.enabled = true; scene.attach(rig); rig.position.set(0, 1.25, -0.45); rig.quaternion.identity(); setStep(S.step); });
+
+async function setupXR() {
+  if (!navigator.xr) { $("xrmsg").textContent = "WebXR is not available here. Open the local HTTPS version in the Meta Quest Browser."; return; }
+  let vr = false, ar = false;
+  try { vr = await navigator.xr.isSessionSupported("immersive-vr"); } catch (e) {}
+  try { ar = await navigator.xr.isSessionSupported("immersive-ar"); } catch (e) {}
+  $("vrBtn").disabled = !vr; $("arBtn").disabled = !ar;
+  $("xrmsg").textContent = vr || ar ? "Headset detected. Put it on after pressing a button." : "No headset here: practice with mouse or touch, or open the local HTTPS version in the Meta Quest Browser.";
+}
+async function startXR(mode) {
+  try {
+    const session = await navigator.xr.requestSession(mode, { optionalFeatures: ["local-floor", "hand-tracking"] });
+    renderer.xr.setReferenceSpaceType("local-floor"); await renderer.xr.setSession(session);
+  } catch (e) { $("xrmsg").textContent = "Could not start the session (" + e.message + "). This page may be blocking WebXR: use the local HTTPS version."; }
+}
+$("vrBtn").onclick = () => startXR("immersive-vr"); $("arBtn").onclick = () => startXR("immersive-ar");
+setupXR();
+
+// ---------- loop ----------
+const wpos = new THREE.Vector3(), wdir = new THREE.Vector3();
+let lastHap = 0;
+function xrFrame() {
+  for (const side in hands) {
+    const h = hands[side], gp = h.src.gamepad; if (!gp) continue;
+    const b = gp.buttons.map((x) => x.pressed), prev = h.prev; h.prev = b;
+    const edge = (i) => b[i] && !prev[i];
+    if (side === "right") {
+      if (edge(4)) setStep(S.step + 1); if (edge(5)) setStep(S.step - 1);
+      const ay = gp.axes[3] || 0;
+      if (Math.abs(ay) > 0.6) { if (S.step === 4) { S.shift = Math.max(0, Math.min(12, S.shift - ay * 0.05)); $("shift").value = S.shift; $("shiftv").textContent = S.shift.toFixed(1) + " mm"; applyShift(); } else { S.rad = Math.max(1.5, Math.min(6, S.rad - ay * 0.02)); $("rad").value = S.rad; $("radv").textContent = S.rad.toFixed(1) + " mm"; toolTip.scale.setScalar(S.rad / 3); panelDirty = true; } }
+      if (h.c.userData.sel) {
+        if (S.step === 3) { h.c.getWorldPosition(wpos); wdir.set(0, 0, -1).applyQuaternion(h.c.getWorldQuaternion(tmpQ)); ray.set(wpos, wdir); ray.far = 0.3; const hit = ray.intersectObject(N.skin, false)[0]; if (hit) { addTrace(hit.point); if (performance.now() - lastHap > 60) { haptic(h.c, 0.2, 20); lastHap = performance.now(); } } }
+        if (S.step === 5) { toolTip.getWorldPosition(wpos); const n = resectAt(wpos); if (performance.now() - lastHap > 50) { if (S.flap) haptic(h.c, 1.0, 40); else if (n) haptic(h.c, 0.55, 30); lastHap = performance.now(); } }
+      }
+      if (h.c.userData.holding && performance.now() - lastHap > 120) { updateMetrics(); if (S.lastSeat) haptic(h.c, 0.4, 30); lastHap = performance.now(); }
+    } else {
+      if (edge(4)) setLayer("t_skin", !$("t_skin").checked); if (edge(5)) setLayer("t_skull", !$("t_skull").checked);
+    }
+  }
+  if (panelDirty && vrPanel.visible) drawPanel();
+}
+renderer.setAnimationLoop(() => {
+  if (flapAnim > 0) { flapAnim = Math.max(0, flapAnim - 0.02); const ad = new THREE.Vector3(...data.approach_dir).normalize(); N.bone_flap.position.copy(ad.multiplyScalar((1 - flapAnim) * 0.05)); if (flapAnim === 0) N.bone_flap.visible = false; }
+  if (renderer.xr.isPresenting) xrFrame(); else controls.update();
+  renderer.render(scene, camera);
+});
+physio(); setStep(1);
+
+// ---------- automated demo for recordings: open index.html#demo ----------
+const democap = document.createElement("div");
+democap.style.cssText = "position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(0,0,0,.78);color:#fff;padding:10px 24px 14px;font-family:var(--body);display:none";
+document.body.appendChild(democap);
+function dcap(a, b) { democap.style.display = "block"; democap.innerHTML = `<div style="font:600 26px var(--body)">${a}</div><div style="font-size:17px;color:#c8d6f0;margin-top:2px">${b || ""}</div>`; }
+const frame = () => new Promise((r) => requestAnimationFrame(r));
+const wait = async (s) => { const t = performance.now(); while (performance.now() - t < s * 1000) await frame(); };
+async function tween(sec, fn) { const t0 = performance.now(); for (;;) { const u = Math.min(1, (performance.now() - t0) / (sec * 1000)); fn(u * u * (3 - 2 * u), u); if (u >= 1) break; await frame(); } }
+async function camTo(pos, tgt, sec) { const p0 = camera.position.clone(), q0 = controls.target.clone(); await tween(sec, (s) => { camera.position.lerpVectors(p0, pos, s); controls.target.lerpVectors(q0, tgt, s); }); }
+async function orbitBy(sec, deg) { const tgt = controls.target.clone(), off0 = camera.position.clone().sub(tgt); await tween(sec, (s, u) => camera.position.copy(tgt).add(off0.clone().applyAxisAngle(new THREE.Vector3(0, 1, 0), THREE.MathUtils.degToRad(deg * u)))); }
+// virtual instrument (what the right Quest controller holds)
+const vtool = new THREE.Group();
+const vbody = new THREE.Mesh(new THREE.CylinderGeometry(0.0015, 0.0028, 0.11, 16), new THREE.MeshStandardMaterial({ color: 0xb8c4cc, metalness: 0.7, roughness: 0.25 }));
+vbody.rotation.x = Math.PI / 2; vbody.position.z = 0.058; vtool.add(vbody);
+const vtip = new THREE.Mesh(new THREE.SphereGeometry(0.003, 20, 14), new THREE.MeshBasicMaterial({ color: 0x3ad1c0 })); vtool.add(vtip);
+vtool.visible = false; scene.add(vtool);
+const Z = new THREE.Vector3(0, 0, 1);
+function placeTool(p, dir) { vtool.position.copy(p); vtool.quaternion.setFromUnitVectors(Z, dir.clone().normalize()); vtool.visible = true; }
+async function runDemo() {
+  controls.enabled = false; controls.enableDamping = false;
+  await wait(1.0);
+  document.title = "DEMO_RUNNING";
+  const ad = new THREE.Vector3(...data.approach_dir).normalize();
+  const headC = rig.position.clone();
+  const entryW = model.localToWorld(new THREE.Vector3(...data.entry));
+  const targetW = model.localToWorld(new THREE.Vector3(...data.target));
+  const side = new THREE.Vector3().crossVectors(ad, new THREE.Vector3(0, 1, 0)).normalize();
+  // 0 · intro
+  camera.position.copy(headC).add(new THREE.Vector3(0.42, 0.22, 0.38)); controls.target.copy(headC);
+  dcap("Craniotomy Trainer XR · WebXR simulator for Meta Quest 3", "Same scene the headset shows in VR or passthrough, rendered here in the browser");
+  await orbitBy(5, 70);
+  // 1 · view
+  setStep(1);
+  dcap("1 · Inspect the plan at 1:1 scale", "Tumor 16.9 cm³ · craniotomy outline ≈ 54 mm · trajectory ≥ 15 mm from the midline");
+  await camTo(targetW.clone().addScaledVector(ad, 0.28).addScaledVector(side, 0.18), targetW, 2.5);
+  await orbitBy(4, 50);
+  // 2 · fit the template
+  setStep(2); tcontrols.detach();
+  const tplW = () => N.template.getWorldPosition(new THREE.Vector3());
+  await camTo(entryW.clone().addScaledVector(ad, 0.26).addScaledVector(side, 0.16).add(new THREE.Vector3(0, 0.04, 0)), entryW, 2.0);
+  dcap("2 · Fit the craniotomy template", "Grab it with the right grip and seat it on the scalp: target < 2 mm and < 2°");
+  const p0 = N.template.position.clone(), q0 = N.template.quaternion.clone();
+  const pEnd = plannedTpl.pos.clone().add(new THREE.Vector3(0.0009, 0.0005, -0.0004));
+  const qEnd = plannedTpl.quat.clone().multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), THREE.MathUtils.degToRad(1.1)));
+  await tween(6, (s) => { N.template.position.lerpVectors(p0, pEnd, s); N.template.quaternion.slerpQuaternions(q0, qEnd, s); placeTool(tplW().addScaledVector(ad, 0.012), ad); updateMetrics(); });
+  await wait(1.5);
+  // 3 · mark the outline
+  setStep(3);
+  dcap("3 · Mark the craniotomy through the template window", "Right trigger draws on the scalp · scored against the planned outline");
+  await camTo(entryW.clone().addScaledVector(ad, 0.24).add(new THREE.Vector3(0, 0.03, 0)), entryW, 1.5);
+  const pts = outlineSamples.map((p) => model.localToWorld(p.clone()));
+  await tween(7, (s, u) => {
+    const n = Math.floor(u * (pts.length - 1));
+    while (S.trace.length < n + 1 && S.trace.length < pts.length) { const p = pts[S.trace.length].clone().add(new THREE.Vector3((Math.random() - 0.5) * 0.0012, (Math.random() - 0.5) * 0.0012, (Math.random() - 0.5) * 0.0012)); addTrace(p); }
+    placeTool(pts[Math.min(n, pts.length - 1)], ad);
+  });
+  updateMetrics(); await wait(1.5);
+  // 4 · open bone and dura, brain shift
+  setStep(4); vtool.visible = false;
+  dcap("4 · Lift the bone flap (≈ 7.5 mm frontal bone)", "Scalp 4 mm and bone 7.5 mm from CT/anatomy references");
+  await camTo(entryW.clone().addScaledVector(ad, 0.22).addScaledVector(side, -0.14).add(new THREE.Vector3(0, 0.05, 0)), targetW, 1.5);
+  liftFlap(); await wait(2.2);
+  dcap("Open the dura: the brain shifts", "4.4 mm (mean reported after dural opening) · cyan wireframe = tumor position in the plan");
+  S.dura = true; setStep(4); setLayer("t_skin", false);
+  await tween(3, (s) => { S.shift = 4.4 * s; $("shift").value = S.shift; $("shiftv").textContent = S.shift.toFixed(1) + " mm"; applyShift(); });
+  await wait(2.0);
+  // 5 · resection
+  setStep(5); setLayer("t_skull", false);
+  dcap("5 · Resect the tumor voxel by voxel", "Yellow = tumor · pink = 3 mm rim of healthy brain · a careful margin leaves a little residual tumor at the rim");
+  await camTo(targetW.clone().addScaledVector(ad, 0.07).addScaledVector(side, 0.17).add(new THREE.Vector3(0, 0.03, 0)), targetW, 1.5);
+  S.rad = 2.5; $("rad").value = 2.5; $("radv").textContent = "2.5 mm";
+  const dH = tumorPos.map((p) => { let b = 1e9; for (const q of healthyPos) b = Math.min(b, p.distanceToSquared(q)); return Math.sqrt(b) * 1000; });
+  const order = tumorPos.map((p, i) => [i, p.dot(ad)]).sort((a, b) => b[1] - a[1]).map((x) => x[0]);
+  let k = 0; const wp = new THREE.Vector3();
+  await tween(13, (s, u) => {
+    const kT = Math.floor(u * order.length);
+    while (k < kT) { const i = order[k++]; if (!aliveT[i] || dH[i] < 3.2) continue; wp.copy(tumorPos[i]); tumorGroup.localToWorld(wp); resectAt(wp); placeTool(wp, ad); }
+  });
+  updateMetrics(); await wait(1.5);
+  // physiology
+  dcap("Physiology panel: CPP = MAP − ICP", "Raising ICP to 32 mmHg drops CPP below 60 mmHg → ischemia-risk alarm");
+  await tween(2.5, (s) => { $("icp").value = Math.round(10 + 22 * s); physio(); });
+  await wait(2.5);
+  await tween(1.5, (s) => { $("icp").value = Math.round(32 - 22 * s); physio(); });
+  // end
+  setLayer("t_skin", true); setLayer("t_skull", true); vtool.visible = false;
+  dcap("Practice it in VR or passthrough on Meta Quest 3", "Academic exercise with 3D Slicer sample data · not a medical device · not for clinical use");
+  await camTo(headC.clone().add(new THREE.Vector3(-0.3, 0.2, 0.42)), headC, 2.0);
+  await orbitBy(4, 40);
+  document.title = "DEMO_DONE";
+}
+if (location.hash === "#demo") runDemo();
+</script>

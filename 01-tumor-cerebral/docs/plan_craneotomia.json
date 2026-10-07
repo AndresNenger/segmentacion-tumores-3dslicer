@@ -1,0 +1,52 @@
+{
+ "advertencia": "Ejercicio academico con un dato de ejemplo de 3D Slicer. No es un dispositivo medico ni apto para uso clinico.",
+ "tumor_centroide_ras": [
+  -3.81,
+  28.31,
+  27.99
+ ],
+ "lado": "izquierdo",
+ "entrada_ras": [
+  -15.11,
+  37.12,
+  63.18
+ ],
+ "direccion": [
+  -0.2973,
+  0.232,
+  0.9262
+ ],
+ "longitud_centro_piel_mm": 38.0,
+ "profundidad_piel_superficie_tumor_mm": 22.2,
+ "angulo_con_vertical_deg": 22.2,
+ "criterio": "trayecto mas corto desde el centro del tumor a la piel, con entrada en el lado del tumor y a >= 15 mm de la linea media",
+ "margen_ventana_mm": 10.0,
+ "apoyo_alrededor_ventana_mm": 22.0,
+ "espesor_plantilla_mm": 3.0,
+ "holgura_mm": 0.3,
+ "area_silueta_tumor_mm2": 828,
+ "diametro_max_ventana_mm": 54,
+ "mallas": {
+  "plantilla": {
+   "tri": 109876,
+   "bordes_abiertos": 0,
+   "volumen_mm3": 18702
+  },
+  "contorno": {
+   "tri": 8996,
+   "bordes_abiertos": 0,
+   "volumen_mm3": 321
+  },
+  "maniqui": {
+   "tri": 167372,
+   "bordes_abiertos": 0,
+   "volumen_mm3": 171499
+  },
+  "tumor": {
+   "tri": 28132,
+   "bordes_abiertos": 0,
+   "volumen_mm3": 16692
+  }
+ },
+ "tiempo_s": 20.2
+}

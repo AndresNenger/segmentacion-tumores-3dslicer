@@ -1,0 +1,47 @@
+TÍTULO (máx. 100 caracteres)
+Cómo segmentar un tumor cerebral con 3D Slicer | Tutorial paso a paso para principiantes
+
+DESCRIPCIÓN
+Aprende a segmentar un tumor cerebral en una resonancia magnética usando 3D Slicer, un programa gratuito. No necesitas experiencia previa: cada paso se explica de forma simple, con los botones marcados en pantalla y narración en español.
+
+Al final habrás segmentado el tumor, lo verás en 3D y habrás medido su volumen (unos 16,9 cm³).
+
+CAPÍTULOS
+0:00 Introducción
+0:21 Así se ve 3D Slicer al abrirlo
+0:38 Abre el módulo SampleData y pulsa MRBrainTumor1
+0:51 El caso se cargó: tres cortes y una vista 3D
+1:02 Recorre los cortes con la barra de cada vista
+1:15 Abre el módulo Segment Editor
+1:25 Pulsa Add para crear un segmento
+1:32 Ahora tienes dos segmentos: Tumor y Healthy tissue
+1:45 Elige la herramienta Paint (pincel)
+1:57 Pinta semillas dentro del tumor
+2:08 Pinta semillas en el tejido sano de alrededor
+2:22 Elige Grow from seeds
+2:34 Pulsa Initialize para ver la vista previa
+2:40 Revisa la vista previa y pulsa Apply
+2:49 Resultado: el tumor quedó marcado en todos los cortes
+2:57 Suaviza el borde con Smoothing (Median, 3 mm)
+3:10 Quita fragmentos sueltos con Islands (Keep largest island)
+3:22 Pulsa Show 3D para ver el tumor en tres dimensiones
+3:29 El modelo 3D del tumor
+3:37 Abre Segment Statistics y pulsa Apply
+3:47 Resultados: volumen, tamaño e intensidad
+4:00 Resumen
+
+DESCARGAS
+- 3D Slicer (gratuito): https://download.slicer.org
+- Datos del ejemplo: se descargan desde el propio programa (módulo SampleData > MRBrainTumor1)
+
+AVISO
+Ejercicio académico con datos públicos de ejemplo de 3D Slicer (MRBrainTumor1). No es un diagnóstico ni sirve para tomar decisiones médicas sobre una persona.
+
+ETIQUETAS
+3D Slicer, segmentación, tumor cerebral, resonancia magnética, imagen médica, ingeniería biomédica, tutorial, principiantes, Segment Editor, Grow from seeds
+
+CONFIGURACIÓN SUGERIDA EN YOUTUBE
+- Miniatura: miniatura_youtube.png (1280x720)
+- Idioma del video: español · Categoría: Educación
+- Público: "No, no es contenido para niños"
+- Subir como "No listado" primero y revisar antes de publicarlo
