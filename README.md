@@ -15,6 +15,7 @@ Proyecto académico que va de una imagen médica (resonancia o tomografía) a un
 | [`03-femur-fea`](03-femur-fea) | Extracción del fémur, malla sólida y análisis de elementos finitos (100 N de compresión). |
 | [`06-comparacion-dos-estudios`](06-comparacion-dos-estudios) | Registro de dos resonancias del mismo paciente, segmentación del tumor en cada una y comparación (Dice, volumen). |
 | [`08-tutorial-simulacion-vr`](08-tutorial-simulacion-vr) | Tutorial paso a paso del simulador de craneotomía en VR: cómo usarlo (5 pasos y fisiología) y cómo se construyó. |
+| [`09-pose-tracker`](09-pose-tracker) | Cuaderno de Colab que mide ángulos articulares con MediaPipe (fisioterapia, ergonomía, deporte). |
 | [`07-ejemplos-cnn-imagen-medica`](07-ejemplos-cnn-imagen-medica) | De la segmentación manual a las CNN: una U-Net 2D probada y enlaces a MONAI, nnU-Net y MedMNIST. |
 
 ## Simulador en línea
