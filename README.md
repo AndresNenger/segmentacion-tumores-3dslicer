@@ -13,6 +13,14 @@ Proyecto académico que va de una imagen médica (resonancia o tomografía) a un
 | [`01-tumor-cerebral`](01-tumor-cerebral) | Segmentación del tumor, análisis de tejido, plantilla de craneotomía, impresión 3D y simulador WebXR para Meta Quest 3. |
 | [`02-pelvis-guia-acetabular`](02-pelvis-guia-acetabular) | Segmentación de la pelvis, análisis de elementos finitos (200 kN) y guía para orientar la copa acetabular. |
 | [`03-femur-fea`](03-femur-fea) | Extracción del fémur, malla sólida y análisis de elementos finitos (100 N de compresión). |
+| [`06-comparacion-dos-estudios`](06-comparacion-dos-estudios) | Registro de dos resonancias del mismo paciente, segmentación del tumor en cada una y comparación (Dice, volumen). |
+| [`07-ejemplos-cnn-imagen-medica`](07-ejemplos-cnn-imagen-medica) | De la segmentación manual a las CNN: una U-Net 2D probada y enlaces a MONAI, nnU-Net y MedMNIST. |
+
+## Simulador en línea
+
+**https://andresnenger.github.io/segmentacion-tumores-3dslicer/** — el simulador de craneotomía se abre directamente en el navegador (GitHub Pages da HTTPS, que WebXR exige). En unas Meta Quest 3, abre esa dirección en el Meta Quest Browser y pulsa *Enter VR* o *Enter passthrough*. Sigue sin estar probado en las gafas.
+
+Otro repositorio relacionado: [generador-tutoriales-3dslicer](https://github.com/AndresNenger/generador-tutoriales-3dslicer), con las herramientas para hacer los videos de tutorial.
 
 ## Resultados principales (tumor cerebral)
 
@@ -25,7 +33,7 @@ Proyecto académico que va de una imagen médica (resonancia o tomografía) a un
 
 1. Instala [3D Slicer](https://download.slicer.org) (probado con 5.12.4).
 2. Abre `04-tutorial-3dslicer/documentos/Tutorial_segmentar_tumor_3DSlicer.docx` y sigue los pasos.
-3. Para el simulador: abre `01-tumor-cerebral/simulador-quest/Craniotomy_Trainer_Quest3.html` en un navegador, o carga ese archivo en unas Meta Quest 3 (instrucciones en `LEEME.txt`).
+3. Para el simulador: usa el enlace de arriba, o abre `01-tumor-cerebral/simulador-quest/Craniotomy_Trainer_Quest3.html` en un navegador (instrucciones para las Quest en `LEEME.txt`).
 
 ## Datos que NO están en el repositorio
 

@@ -1,0 +1,21 @@
+{
+ "registro": {
+  "estado": "Completed",
+  "correlacion_antes": null,
+  "correlacion_despues": 0.816,
+  "nota_correlacion_antes": "no calculable: los dos estudios tienen distinta rejilla"
+ },
+ "estudio1": {
+  "volumen_cm3": 16.94,
+  "intensidad_media": 179.2
+ },
+ "estudio2": {
+  "volumen_cm3": 18.51,
+  "intensidad_media": 232.9
+ },
+ "cambio_volumen_cm3": 1.57,
+ "cambio_volumen_pct": 9.3,
+ "dice": 0.955,
+ "desplazamiento_centroide_mm": 0.48,
+ "nota": "Segmentación semiautomática sin referencia experta; los cambios menores al error del método (≈ 1-2 cm³) no son concluyentes."
+}
